@@ -10,16 +10,15 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet var graphView: GraphView!
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+
+        graphView.maxY = 4
+        graphView.minY = 0
+        graphView.padding = UIEdgeInsetsMake(10, 10, 50, 10)
+        graphView.data = [("Zero", 0), ("One", 1), ("Four", 4), ("Two", 2), ("Three", 3)]
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-
 }
 
