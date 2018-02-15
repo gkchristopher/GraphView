@@ -15,10 +15,14 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        graphView.maxY = 4
+        graphView.maxY = 3
         graphView.minY = 0
-        graphView.padding = UIEdgeInsetsMake(10, 10, 50, 10)
-        graphView.data = [("Zero", 0), ("One", 1), ("Four", 4), ("Two", 2), ("Three", 3)]
+        graphView.padding = UIEdgeInsetsMake(10, 10, 10, 10)
+        graphView.data = [GraphPoint(key: "Zero", value: 0),
+                          GraphPoint(key: "One", value: 1),
+                          GraphPoint(key: "Four", value: 4),
+                          GraphPoint(key: "Two", value: 2),
+                          GraphPoint(key: "Three", value: 3)]
     }
 }
 

@@ -8,6 +8,11 @@
 
 import UIKit
 
+public struct GraphPoint {
+    let key: String
+    let value: CGFloat
+}
+
 @IBDesignable
 open class GraphView: UIView {
 
@@ -25,7 +30,7 @@ open class GraphView: UIView {
         }
     }
 
-    var data: [(String, CGFloat)]? {
+    var data: [GraphPoint]? {
         didSet {
             setNeedsLayout()
             layoutIfNeeded()
@@ -86,16 +91,25 @@ open class GraphView: UIView {
 
         let linePath = CGMutablePath()
 
-        for (index, element) in data.enumerated() {
+        for (index, graphPoint) in data.enumerated() {
             if index == 0 {
-                linePath.move(to: CGPoint(x: contentFrame.minX, y: contentFrame.maxY - element.1 * yScale))
+                linePath.move(to: CGPoint(x: contentFrame.minX, y: contentFrame.maxY - graphPoint.value * yScale))
             } else {
-                linePath.addLine(to: CGPoint(x: CGFloat(index) * xScale + contentFrame.minX, y: contentFrame.maxY - element.1 * yScale))
+                linePath.addLine(to: CGPoint(x: CGFloat(index) * xScale + contentFrame.minX, y: contentFrame.maxY - graphPoint.value * yScale))
             }
         }
 
         line.path = linePath
         line.strokeColor = tintColor.cgColor
         line.fillColor = backgroundColor?.cgColor
+    }
+
+    open override func prepareForInterfaceBuilder() {
+        super.prepareForInterfaceBuilder()
+        data = [GraphPoint(key: "Zero", value: 0),
+                GraphPoint(key: "One", value: 0.2),
+                GraphPoint(key: "Two", value: 0.6),
+                GraphPoint(key: "Three", value: 0.3),
+                GraphPoint(key: "Four", value: 1.0)]
     }
 }
