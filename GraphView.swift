@@ -71,7 +71,6 @@ open class GraphView: UIView {
 
     open override func layoutSubviews() {
         super.layoutSubviews()
-
         plotLine()
     }
 
@@ -89,7 +88,7 @@ open class GraphView: UIView {
         let xScale = contentFrame.width / CGFloat(data.count - 1)
         let yScale = contentFrame.height / (maxY - minY)
 
-        let linePath = CGMutablePath()
+        let linePath = UIBezierPath()
 
         for (index, graphPoint) in data.enumerated() {
             if index == 0 {
@@ -99,7 +98,7 @@ open class GraphView: UIView {
             }
         }
 
-        line.path = linePath
+        line.path = linePath.cgPath
         line.strokeColor = tintColor.cgColor
         line.fillColor = backgroundColor?.cgColor
     }
