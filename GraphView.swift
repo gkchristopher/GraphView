@@ -1,11 +1,3 @@
-//
-//  GraphView.swift
-//  GraphViewExample
-//
-//  Created by Christopher J Moore on 2/14/18.
-//  Copyright © 2018 Roving Mobile. All rights reserved.
-//
-
 import UIKit
 
 public struct GraphPoint {
@@ -37,7 +29,7 @@ open class GraphView: UIView {
         }
     }
 
-    var lineWidth: CGFloat = 7.0 {
+    var lineWidth: CGFloat = 3.0 {
         didSet {
             setNeedsLayout()
             layoutIfNeeded()
@@ -52,6 +44,7 @@ open class GraphView: UIView {
     }
 
     private let line = CAShapeLayer()
+    private var labels = [UILabel]()
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -72,7 +65,16 @@ open class GraphView: UIView {
     open override func layoutSubviews() {
         super.layoutSubviews()
 
+        labels.forEach { $0.removeFromSuperview() }
+        labels.removeAll(keepingCapacity: true)
+
         plotLine()
+    }
+
+    open override func tintColorDidChange() {
+        super.tintColorDidChange()
+        setNeedsLayout()
+        layoutIfNeeded()
     }
 
     private func plotLine() {
@@ -93,15 +95,30 @@ open class GraphView: UIView {
 
         for (index, graphPoint) in data.enumerated() {
             if index == 0 {
-                linePath.move(to: CGPoint(x: contentFrame.minX, y: contentFrame.maxY - graphPoint.value * yScale))
+                let point = CGPoint(x: contentFrame.minX, y: contentFrame.maxY - (graphPoint.value - minY) * yScale)
+                linePath.move(to: point)
+                addLabel(for: point, with: graphPoint.key)
             } else {
-                linePath.addLine(to: CGPoint(x: CGFloat(index) * xScale + contentFrame.minX, y: contentFrame.maxY - graphPoint.value * yScale))
+                let point = CGPoint(x: CGFloat(index) * xScale + contentFrame.minX, y: contentFrame.maxY - (graphPoint.value - minY) * yScale)
+                linePath.addLine(to: point)
+                addLabel(for: point, with: graphPoint.key)
             }
         }
 
         line.path = linePath
         line.strokeColor = tintColor.cgColor
         line.fillColor = backgroundColor?.cgColor
+    }
+
+    private func addLabel(for point: CGPoint, with title: String?) {
+        let label = UILabel(frame: .zero)
+        label.font = UIFont.preferredFont(forTextStyle: .caption1)
+        label.backgroundColor = .white
+        label.text = title
+        label.sizeToFit()
+        label.center = point
+        addSubview(label)
+        labels.append(label)
     }
 
     open override func prepareForInterfaceBuilder() {
