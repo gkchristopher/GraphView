@@ -36,7 +36,7 @@ open class GraphView: UIView {
         }
     }
 
-    var padding: UIEdgeInsets = UIEdgeInsetsMake(20, 20, 20, 20) {
+    var padding: UIEdgeInsets = UIEdgeInsetsMake(20, 30, 20, 30) {
         didSet {
             setNeedsLayout()
             layoutIfNeeded()
@@ -44,7 +44,8 @@ open class GraphView: UIView {
     }
 
     private let line = CAShapeLayer()
-    private var labels = [UILabel]()
+    private var labels = [UIView]()
+    private let labelMargin: CGFloat = 2
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -113,12 +114,23 @@ open class GraphView: UIView {
     private func addLabel(for point: CGPoint, with title: String?) {
         let label = UILabel(frame: .zero)
         label.font = UIFont.preferredFont(forTextStyle: .caption1)
-        label.backgroundColor = .white
+        label.textColor = .black
+        label.backgroundColor = .clear
         label.text = title
         label.sizeToFit()
-        label.center = point
-        addSubview(label)
-        labels.append(label)
+
+        let container = UIView(frame: label.bounds.insetBy(dx: -labelMargin, dy: -labelMargin))
+        container.addSubview(label)
+        label.center = CGPoint(x: container.bounds.midX, y: container.bounds.midY)
+        addSubview(container)
+        container.center = point
+
+        let circle = CAShapeLayer()
+        let path = UIBezierPath(roundedRect: container.bounds, cornerRadius: container.bounds.height / 2)
+        circle.path = path.cgPath
+        circle.fillColor = backgroundColor?.cgColor
+        container.layer.insertSublayer(circle, at: 0)
+        labels.append(container)
     }
 
     open override func prepareForInterfaceBuilder() {
