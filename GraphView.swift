@@ -29,8 +29,9 @@ open class GraphView: UIView {
         }
     }
 
-    var lineWidth: CGFloat = 3.0 {
+    var lineWidth: CGFloat = 4.0 {
         didSet {
+            line.lineWidth = lineWidth
             setNeedsLayout()
             layoutIfNeeded()
         }
