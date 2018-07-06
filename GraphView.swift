@@ -37,6 +37,13 @@ open class GraphView: UIView {
         }
     }
 
+    var labelFont: UIFont = UIFont.preferredFont(forTextStyle: .caption1) {
+        didSet {
+            setNeedsLayout()
+            layoutIfNeeded()
+        }
+    }
+
     var padding: UIEdgeInsets = UIEdgeInsetsMake(20, 30, 20, 30) {
         didSet {
             setNeedsLayout()
@@ -114,7 +121,8 @@ open class GraphView: UIView {
 
     private func addLabel(for point: CGPoint, with title: String?) {
         let label = UILabel(frame: .zero)
-        label.font = UIFont.preferredFont(forTextStyle: .caption1)
+        label.font = labelFont
+        label.adjustsFontForContentSizeCategory = true
         label.textColor = .black
         label.backgroundColor = .clear
         label.text = title
