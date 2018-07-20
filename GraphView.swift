@@ -1,8 +1,10 @@
 import UIKit
+import Foundation
 
 public struct GraphPoint {
     let key: String
     let value: CGFloat
+    let label: String?
 }
 
 @IBDesignable
@@ -44,7 +46,21 @@ open class GraphView: UIView {
         }
     }
 
-    var padding: UIEdgeInsets = UIEdgeInsetsMake(20, 30, 20, 30) {
+    var lineLabelColor: UIColor = .darkText {
+        didSet {
+            setNeedsLayout()
+            layoutIfNeeded()
+        }
+    }
+
+    var xAxisLabelColor: UIColor = .gray {
+        didSet {
+            setNeedsLayout()
+            layoutIfNeeded()
+        }
+    }
+
+    var padding: UIEdgeInsets = UIEdgeInsets.init(top: 20, left: 30, bottom: 30, right: 30) {
         didSet {
             setNeedsLayout()
             layoutIfNeeded()
@@ -53,6 +69,7 @@ open class GraphView: UIView {
 
     private let line = CAShapeLayer()
     private var labels = [UIView]()
+    private var xAxisLabels = [UIView]()
     private let labelMargin: CGFloat = 2
 
     public override init(frame: CGRect) {
@@ -67,7 +84,7 @@ open class GraphView: UIView {
 
     private func initializeView() {
         layer.addSublayer(line)
-        line.lineCap = kCALineCapRound
+        line.lineCap = CAShapeLayerLineCap.round
         line.lineWidth = lineWidth
     }
 
@@ -76,6 +93,9 @@ open class GraphView: UIView {
 
         labels.forEach { $0.removeFromSuperview() }
         labels.removeAll(keepingCapacity: true)
+
+        xAxisLabels.forEach { $0.removeFromSuperview() }
+        xAxisLabels.removeAll(keepingCapacity: true)
 
         plotLine()
     }
@@ -103,15 +123,16 @@ open class GraphView: UIView {
         let linePath = CGMutablePath()
 
         for (index, graphPoint) in data.enumerated() {
+            let point: CGPoint
             if index == 0 {
-                let point = CGPoint(x: contentFrame.minX, y: contentFrame.maxY - (graphPoint.value - minY) * yScale)
+                point = CGPoint(x: contentFrame.minX, y: contentFrame.maxY - (graphPoint.value - minY) * yScale)
                 linePath.move(to: point)
-                addLabel(for: point, with: graphPoint.key)
             } else {
-                let point = CGPoint(x: CGFloat(index) * xScale + contentFrame.minX, y: contentFrame.maxY - (graphPoint.value - minY) * yScale)
+                point = CGPoint(x: CGFloat(index) * xScale + contentFrame.minX, y: contentFrame.maxY - (graphPoint.value - minY) * yScale)
                 linePath.addLine(to: point)
-                addLabel(for: point, with: graphPoint.key)
             }
+            addLabel(for: point, with: graphPoint.key)
+            addXAxisLabel(for: point, with: graphPoint.label)
         }
 
         line.path = linePath
@@ -123,7 +144,7 @@ open class GraphView: UIView {
         let label = UILabel(frame: .zero)
         label.font = labelFont
         label.adjustsFontForContentSizeCategory = true
-        label.textColor = .black
+        label.textColor = lineLabelColor
         label.backgroundColor = .clear
         label.text = title
         label.sizeToFit()
@@ -142,12 +163,26 @@ open class GraphView: UIView {
         labels.append(container)
     }
 
+    private func addXAxisLabel(for point: CGPoint, with title: String?) {
+        let label = UILabel(frame: .zero)
+        label.font = UIFont.preferredFont(forTextStyle: .caption2)
+        label.adjustsFontForContentSizeCategory = true
+        label.textColor = xAxisLabelColor
+        label.text = title
+        label.sizeToFit()
+
+        label.center = CGPoint(x: point.x, y: bounds.maxY - label.bounds.height / 2 - 4)
+        addSubview(label)
+
+        xAxisLabels.append(label)
+    }
+
     open override func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
-        data = [GraphPoint(key: "Zero", value: 0),
-                GraphPoint(key: "One", value: 0.2),
-                GraphPoint(key: "Two", value: 0.6),
-                GraphPoint(key: "Three", value: 0.3),
-                GraphPoint(key: "Four", value: 1.0)]
+        data = [GraphPoint(key: "Zero", value: 0, label: "Mon"),
+                GraphPoint(key: "One", value: 0.2, label: "Tue"),
+                GraphPoint(key: "Two", value: 0.6, label: "Wed"),
+                GraphPoint(key: "Three", value: 0.3, label: "Thu"),
+                GraphPoint(key: "Four", value: 1.0, label: "Fri")]
     }
 }
