@@ -46,6 +46,13 @@ open class GraphView: UIView {
         }
     }
 
+    var labelFillColor: UIColor = .clear {
+        didSet {
+            setNeedsLayout()
+            layoutIfNeeded()
+        }
+    }
+
     var lineLabelColor: UIColor = .darkText {
         didSet {
             setNeedsLayout()
@@ -158,7 +165,7 @@ open class GraphView: UIView {
         let circle = CAShapeLayer()
         let path = UIBezierPath(roundedRect: container.bounds, cornerRadius: container.bounds.height / 2)
         circle.path = path.cgPath
-        circle.fillColor = backgroundColor?.cgColor
+        circle.fillColor = labelFillColor.cgColor
         container.layer.insertSublayer(circle, at: 0)
         labels.append(container)
     }
