@@ -186,10 +186,11 @@ open class GraphView: UIView {
 
     open override func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
-        data = [GraphPoint(key: "Zero", value: 0, label: "Mon"),
-                GraphPoint(key: "One", value: 0.2, label: "Tue"),
-                GraphPoint(key: "Two", value: 0.6, label: "Wed"),
-                GraphPoint(key: "Three", value: 0.3, label: "Thu"),
-                GraphPoint(key: "Four", value: 1.0, label: "Fri")]
+        data = [GraphPoint(key: "0.0", value: 0, label: "Mon"),
+                GraphPoint(key: "0.2", value: 0.2, label: "Tue"),
+                GraphPoint(key: "0.6", value: 0.6, label: "Wed"),
+                GraphPoint(key: "0.3", value: 0.3, label: "Thu"),
+                GraphPoint(key: "1.0", value: 1.0, label: "Fri")]
+        labelFillColor = .white
     }
 }
