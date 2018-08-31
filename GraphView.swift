@@ -128,6 +128,7 @@ open class GraphView: UIView {
         let yScale = contentFrame.height / (maxY - minY)
 
         let linePath = CGMutablePath()
+        var points = [CGPoint]()
 
         for (index, graphPoint) in data.enumerated() {
             let point: CGPoint
@@ -138,11 +139,12 @@ open class GraphView: UIView {
                 point = CGPoint(x: CGFloat(index) * xScale + contentFrame.minX, y: contentFrame.maxY - (graphPoint.value - minY) * yScale)
                 linePath.addLine(to: point)
             }
+            points.append(point)
             addLabel(for: point, with: graphPoint.key)
             addXAxisLabel(for: point, with: graphPoint.label)
         }
 
-        line.path = linePath
+        line.path = UIBezierPath.hermiteInterpolation(for: points)?.cgPath
         line.strokeColor = tintColor.cgColor
         line.fillColor = backgroundColor?.cgColor
     }
