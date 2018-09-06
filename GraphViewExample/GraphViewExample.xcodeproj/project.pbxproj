@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		839B789F2141F305000AF7EC /* UIBezierPath+Smoothing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839B789E2141F305000AF7EC /* UIBezierPath+Smoothing.swift */; };
 		83FEE4572034AB1E00300D6D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FEE4562034AB1E00300D6D /* AppDelegate.swift */; };
 		83FEE4592034AB1E00300D6D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FEE4582034AB1E00300D6D /* ViewController.swift */; };
 		83FEE45C2034AB1E00300D6D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 83FEE45A2034AB1E00300D6D /* Main.storyboard */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		839B789E2141F305000AF7EC /* UIBezierPath+Smoothing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIBezierPath+Smoothing.swift"; path = "../../UIBezierPath+Smoothing.swift"; sourceTree = "<group>"; };
 		83FEE4532034AB1E00300D6D /* GraphViewExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GraphViewExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		83FEE4562034AB1E00300D6D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		83FEE4582034AB1E00300D6D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -63,6 +65,7 @@
 				83FEE45F2034AB1E00300D6D /* LaunchScreen.storyboard */,
 				83FEE4622034AB1E00300D6D /* Info.plist */,
 				83FEE4682034ABF200300D6D /* GraphView.swift */,
+				839B789E2141F305000AF7EC /* UIBezierPath+Smoothing.swift */,
 			);
 			path = GraphViewExample;
 			sourceTree = "<group>";
@@ -141,6 +144,7 @@
 			files = (
 				83FEE4592034AB1E00300D6D /* ViewController.swift in Sources */,
 				83FEE4572034AB1E00300D6D /* AppDelegate.swift in Sources */,
+				839B789F2141F305000AF7EC /* UIBezierPath+Smoothing.swift in Sources */,
 				83FEE4692034ABF200300D6D /* GraphView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
