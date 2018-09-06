@@ -2,9 +2,9 @@ import UIKit
 import Foundation
 
 public struct GraphPoint {
-    let key: String
-    let value: CGFloat
     let label: String?
+    let value: CGFloat
+    let axisLabel: NSAttributedString?
 }
 
 @IBDesignable
@@ -121,27 +121,22 @@ open class GraphView: UIView {
 
         let contentFrame = CGRect(x: padding.left,
                                   y: padding.top,
-                                  width: bounds.width - padding.left - padding.right,
-                                  height: bounds.height - padding.top - padding.bottom)
+                                  width: bounds.width - (padding.left + padding.right),
+                                  height: bounds.height - (padding.top + padding.bottom))
 
         let xScale = contentFrame.width / CGFloat(data.count - 1)
         let yScale = contentFrame.height / (maxY - minY)
 
-        let linePath = CGMutablePath()
         var points = [CGPoint]()
 
         for (index, graphPoint) in data.enumerated() {
-            let point: CGPoint
-            if index == 0 {
-                point = CGPoint(x: contentFrame.minX, y: contentFrame.maxY - (graphPoint.value - minY) * yScale)
-                linePath.move(to: point)
-            } else {
-                point = CGPoint(x: CGFloat(index) * xScale + contentFrame.minX, y: contentFrame.maxY - (graphPoint.value - minY) * yScale)
-                linePath.addLine(to: point)
-            }
+            let point = CGPoint(x: CGFloat(index) * xScale + contentFrame.minX,
+                                y: contentFrame.maxY - (graphPoint.value - minY) * yScale)
             points.append(point)
-            addLabel(for: point, with: graphPoint.key)
-            addXAxisLabel(for: point, with: graphPoint.label)
+            if let pointLabel = graphPoint.label {
+                addLabel(for: point, with: pointLabel)
+            }
+            addXAxisLabel(for: point, with: graphPoint.axisLabel)
         }
 
         line.path = UIBezierPath.hermiteInterpolation(for: points)?.cgPath
@@ -172,12 +167,13 @@ open class GraphView: UIView {
         labels.append(container)
     }
 
-    private func addXAxisLabel(for point: CGPoint, with title: String?) {
+    private func addXAxisLabel(for point: CGPoint, with title: NSAttributedString?) {
         let label = UILabel(frame: .zero)
         label.font = UIFont.preferredFont(forTextStyle: .caption2)
         label.adjustsFontForContentSizeCategory = true
         label.textColor = xAxisLabelColor
-        label.text = title
+        label.backgroundColor = backgroundColor
+        label.attributedText = title
         label.sizeToFit()
 
         label.center = CGPoint(x: point.x, y: bounds.maxY - label.bounds.height / 2 - 4)
@@ -188,11 +184,11 @@ open class GraphView: UIView {
 
     open override func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
-        data = [GraphPoint(key: "0.0", value: 0, label: "Mon"),
-                GraphPoint(key: "0.2", value: 0.2, label: "Tue"),
-                GraphPoint(key: "0.6", value: 0.6, label: "Wed"),
-                GraphPoint(key: "0.3", value: 0.3, label: "Thu"),
-                GraphPoint(key: "1.0", value: 1.0, label: "Fri")]
+        data = [GraphPoint(label: "0.0", value: 0.0, axisLabel: NSAttributedString(string: "Mon")),
+                GraphPoint(label: "0.2", value: 0.2, axisLabel: NSAttributedString(string: "Tue")),
+                GraphPoint(label: "0.6", value: 0.6, axisLabel: NSAttributedString(string: "Wed")),
+                GraphPoint(label: "0.3", value: 0.3, axisLabel: NSAttributedString(string: "Thu")),
+                GraphPoint(label: "1.0", value: 1.0, axisLabel: NSAttributedString(string: "Fri"))]
         labelFillColor = .white
     }
 }
