@@ -1,78 +1,50 @@
 import UIKit
 import Foundation
 
-public struct GraphPoint {
-    let label: String?
-    let value: CGFloat
-    let axisLabel: NSAttributedString?
+public protocol GraphViewDataSource: AnyObject {
+    func numberOfPoints(in graphView: GraphView) -> Int
+    func graphView(_ graphView: GraphView, valueAt index: Int) -> CGFloat
+    func graphView(_ graphView: GraphView, labelForPointAt index: Int) -> String?
+    func graphView(_ graphView: GraphView, xAxisLabelForPointAt index: Int) -> String?
+    func numberOfHorizontalGridLines(in graphView: GraphView) -> Int
+    func graphView(_ graphView: GraphView, labelForHorizontalGridLineAt index: Int) -> String?
+}
+
+extension GraphViewDataSource {
+
+    func graphView(_ graphView: GraphView, labelForPointAt index: Int) -> String? {
+        return nil
+    }
+
+    func graphView(_ graphView: GraphView, xAxisLabelForPointAt index: Int) -> String? {
+        return nil
+    }
+
+    func numberOfHorizontalGridLines(in graphView: GraphView) -> Int {
+        return 0
+    }
+
+    func graphView(_ graphView: GraphView, labelForHorizontalGridLineAt index: Int) -> String? {
+        return nil
+    }
 }
 
 @IBDesignable
 open class GraphView: UIView {
 
-    var minY: CGFloat = 0.0 {
-        didSet {
-            setNeedsLayout()
-            layoutIfNeeded()
-        }
-    }
-
-    var maxY: CGFloat = 1.0 {
-        didSet {
-            setNeedsLayout()
-            layoutIfNeeded()
-        }
-    }
-
-    var data: [GraphPoint]? {
-        didSet {
-            setNeedsLayout()
-            layoutIfNeeded()
-        }
-    }
+    public weak var dataSource: GraphViewDataSource?
 
     var lineWidth: CGFloat = 4.0 {
         didSet {
             line.lineWidth = lineWidth
-            setNeedsLayout()
-            layoutIfNeeded()
         }
     }
 
-    var labelFont: UIFont = UIFont.preferredFont(forTextStyle: .caption1) {
-        didSet {
-            setNeedsLayout()
-            layoutIfNeeded()
-        }
-    }
-
-    var labelFillColor: UIColor = .clear {
-        didSet {
-            setNeedsLayout()
-            layoutIfNeeded()
-        }
-    }
-
-    var lineLabelColor: UIColor = .darkText {
-        didSet {
-            setNeedsLayout()
-            layoutIfNeeded()
-        }
-    }
-
-    var xAxisLabelColor: UIColor = .gray {
-        didSet {
-            setNeedsLayout()
-            layoutIfNeeded()
-        }
-    }
-
-    var padding: UIEdgeInsets = UIEdgeInsets.init(top: 20, left: 30, bottom: 30, right: 30) {
-        didSet {
-            setNeedsLayout()
-            layoutIfNeeded()
-        }
-    }
+    var labelFont: UIFont = UIFont.preferredFont(forTextStyle: .caption1)
+    var labelTextColor: UIColor = .darkText
+    var labelFillColor: UIColor = .clear
+    var xAxisLabelTextColor: UIColor = .gray
+    var padding: UIEdgeInsets = UIEdgeInsets.init(top: 20, left: 30, bottom: 30, right: 30)
 
     private let line = CAShapeLayer()
     private var labels = [UIView]()
@@ -95,8 +67,20 @@ open class GraphView: UIView {
         line.lineWidth = lineWidth
     }
 
+    public func reloadData() {
+        setNeedsLayout()
+        layoutIfNeeded()
+    }
+
+    public func clearPlot() {
+        line.path = nil
+        reloadData()
+    }
+
     open override func layoutSubviews() {
         super.layoutSubviews()
+
+        guard let dataSource = dataSource else { return }
 
         labels.forEach { $0.removeFromSuperview() }
         labels.removeAll(keepingCapacity: true)
@@ -104,7 +88,11 @@ open class GraphView: UIView {
         xAxisLabels.forEach { $0.removeFromSuperview() }
         xAxisLabels.removeAll(keepingCapacity: true)
 
-        plotLine()
+        line.strokeColor = tintColor.cgColor
+        line.fillColor = backgroundColor?.cgColor
+
+        let points = pointsForPlot(from: dataSource)
+        plotLine(using: points)
     }
 
     open override func tintColorDidChange() {
@@ -113,42 +101,38 @@ open class GraphView: UIView {
         layoutIfNeeded()
     }
 
-    private func plotLine() {
-        guard let data = data else {
-            line.path = nil
-            return
-        }
+    private var contentFrame: CGRect {
+        return CGRect(x: padding.left,
+                      y: padding.top,
+                      width: bounds.width - (padding.left + padding.right),
+                      height: bounds.height - (padding.top + padding.bottom))
+    }
 
-        let contentFrame = CGRect(x: padding.left,
-                                  y: padding.top,
-                                  width: bounds.width - (padding.left + padding.right),
-                                  height: bounds.height - (padding.top + padding.bottom))
+    private func pointsForPlot(from dataSource: GraphViewDataSource) -> [CGPoint] {
+        let count = dataSource.numberOfPoints(in: self)
 
-        let xScale = contentFrame.width / CGFloat(data.count - 1)
-        let yScale = contentFrame.height / (maxY - minY)
+        let xSpacing = contentFrame.width / CGFloat(count - 1)
+        let yDelta = contentFrame.height
 
         var points = [CGPoint]()
 
-        for (index, graphPoint) in data.enumerated() {
-            let point = CGPoint(x: CGFloat(index) * xScale + contentFrame.minX,
-                                y: contentFrame.maxY - (graphPoint.value - minY) * yScale)
+        for index in 0..<count {
+            let point = CGPoint(x: CGFloat(index) * xSpacing + contentFrame.minX,
+                                y: contentFrame.maxY - dataSource.graphView(self, valueAt: index) * yDelta)
             points.append(point)
-            if let pointLabel = graphPoint.label {
-                addLabel(for: point, with: pointLabel)
-            }
-            addXAxisLabel(for: point, with: graphPoint.axisLabel)
         }
+        return points
+    }
 
+    private func plotLine(using points: [CGPoint]) {
         line.path = UIBezierPath.hermiteInterpolation(for: points)?.cgPath
-        line.strokeColor = tintColor.cgColor
-        line.fillColor = backgroundColor?.cgColor
     }
 
     private func addLabel(for point: CGPoint, with title: String?) {
         let label = UILabel(frame: .zero)
         label.font = labelFont
         label.adjustsFontForContentSizeCategory = true
-        label.textColor = lineLabelColor
+        label.textColor = labelTextColor
         label.backgroundColor = .clear
         label.text = title
         label.sizeToFit()
@@ -171,7 +155,7 @@ open class GraphView: UIView {
         let label = UILabel(frame: .zero)
         label.font = UIFont.preferredFont(forTextStyle: .caption2)
         label.adjustsFontForContentSizeCategory = true
-        label.textColor = xAxisLabelColor
+        label.textColor = xAxisLabelTextColor
         label.backgroundColor = backgroundColor
         label.attributedText = title
         label.sizeToFit()
@@ -182,13 +166,13 @@ open class GraphView: UIView {
         xAxisLabels.append(label)
     }
 
-    open override func prepareForInterfaceBuilder() {
-        super.prepareForInterfaceBuilder()
-        data = [GraphPoint(label: "0.0", value: 0.0, axisLabel: NSAttributedString(string: "Mon")),
-                GraphPoint(label: "0.2", value: 0.2, axisLabel: NSAttributedString(string: "Tue")),
-                GraphPoint(label: "0.6", value: 0.6, axisLabel: NSAttributedString(string: "Wed")),
-                GraphPoint(label: "0.3", value: 0.3, axisLabel: NSAttributedString(string: "Thu")),
-                GraphPoint(label: "1.0", value: 1.0, axisLabel: NSAttributedString(string: "Fri"))]
-        labelFillColor = .white
-    }
+//    open override func prepareForInterfaceBuilder() {
+//        super.prepareForInterfaceBuilder()
+//        data = [GraphPoint(label: "0.0", value: 0.0, axisLabel: NSAttributedString(string: "Mon")),
+//                GraphPoint(label: "0.2", value: 0.2, axisLabel: NSAttributedString(string: "Tue")),
+//                GraphPoint(label: "0.6", value: 0.6, axisLabel: NSAttributedString(string: "Wed")),
+//                GraphPoint(label: "0.3", value: 0.3, axisLabel: NSAttributedString(string: "Thu")),
+//                GraphPoint(label: "1.0", value: 1.0, axisLabel: NSAttributedString(string: "Fri"))]
+//        labelFillColor = .white
+//    }
 }
