@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,19 +18,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1KG-oN-Ems" customClass="GraphView" customModule="GraphViewExample" customModuleProvider="target">
-                                <rect key="frame" x="16" y="44" width="343" height="247"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1KG-oN-Ems" customClass="GraphView" customModule="GraphViewExample" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="283" width="375" height="247"/>
                                 <color key="backgroundColor" red="0.46202266219999999" green="0.83828371759999998" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="247" id="fn9-st-1yv"/>
+                                    <constraint firstAttribute="height" constant="247" id="jwo-ft-vAk"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="1KG-oN-Ems" secondAttribute="trailing" constant="16" id="H6V-cE-deJ"/>
-                            <constraint firstItem="1KG-oN-Ems" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="PAw-3N-z5c"/>
-                            <constraint firstItem="1KG-oN-Ems" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="Xap-Ke-SJ4"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="1KG-oN-Ems" secondAttribute="trailing" id="Ut5-b8-xht"/>
+                            <constraint firstItem="1KG-oN-Ems" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="fFw-JR-KvX"/>
+                            <constraint firstItem="1KG-oN-Ems" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="sri-Bd-kVa"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>

@@ -2,4 +2,4 @@
 
 ### Work In Progress
 
-GraphView is a swift tool that can be easily setup and configured to display a line graph as a UIView.
+GraphView is a UIView written in Swift that can easily be setup and configured to display a line graph.
