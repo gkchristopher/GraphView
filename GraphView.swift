@@ -43,13 +43,15 @@ open class GraphView: UIView {
     var labelFont: UIFont = UIFont.preferredFont(forTextStyle: .caption1)
     var labelTextColor: UIColor = .darkText
     var labelFillColor: UIColor = .clear
+    var gridLineColor: UIColor = UIColor(white: 0.5, alpha: 1.0)
     var xAxisLabelTextColor: UIColor = .gray
-    var padding: UIEdgeInsets = UIEdgeInsets.init(top: 20, left: 30, bottom: 30, right: 30)
+    var padding: UIEdgeInsets = UIEdgeInsets.init(top: 20, left: 38, bottom: 30, right: 20)
 
     private let line = CAShapeLayer()
     private let gridLines = CAShapeLayer()
     private var labels = [UIView]()
     private var xAxisLabels = [UIView]()
+    private var yAxisLabels = [UIView]()
     private let labelMargin: CGFloat = 2
 
     public override init(frame: CGRect) {
@@ -64,7 +66,7 @@ open class GraphView: UIView {
 
     private func initializeView() {
         gridLines.lineWidth = 1
-        gridLines.strokeColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1).cgColor
+        gridLines.strokeColor = gridLineColor.cgColor
         gridLines.lineDashPattern = [1, 1]
         layer.addSublayer(gridLines)
 
@@ -99,6 +101,7 @@ open class GraphView: UIView {
         plotLine(using: points)
         addGridLines(from: dataSource)
         addXAxisLabels(for: points, from: dataSource)
+        addYAxisLabels(from: dataSource)
     }
 
     open override func tintColorDidChange() {
@@ -187,5 +190,27 @@ open class GraphView: UIView {
         }
 
         gridLines.path = gridLinePath
+    }
+
+    private func addYAxisLabels(from dataSource: GraphViewDataSource) {
+        yAxisLabels.forEach { $0.removeFromSuperview() }
+        yAxisLabels.removeAll(keepingCapacity: true)
+
+        let numberOfLabels = dataSource.numberOfHorizontalGridLines(in: self)
+        let ySpacing = plotFrame.height / CGFloat(numberOfLabels - 1)
+
+        for index in 0..<numberOfLabels {
+            let text = dataSource.graphView(self, labelForHorizontalGridLineAt: index)
+            let label = UILabel(frame: .zero)
+            label.font = UIFont.preferredFont(forTextStyle: .caption2)
+            label.adjustsFontForContentSizeCategory = true
+            label.textColor = xAxisLabelTextColor
+            label.backgroundColor = backgroundColor
+            label.text = text
+            label.sizeToFit()
+            label.center = CGPoint(x: 20, y: plotFrame.maxY - ySpacing * CGFloat(index))
+            addSubview(label)
+            yAxisLabels.append(label)
+        }
     }
 }
