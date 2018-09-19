@@ -10,7 +10,7 @@ public protocol GraphViewDataSource: AnyObject {
     func graphView(_ graphView: GraphView, labelForHorizontalGridLineAt index: Int) -> String?
 }
 
-extension GraphViewDataSource {
+public extension GraphViewDataSource {
 
     func graphView(_ graphView: GraphView, labelForPointAt index: Int) -> String? {
         return nil
@@ -47,6 +47,7 @@ open class GraphView: UIView {
     var padding: UIEdgeInsets = UIEdgeInsets.init(top: 20, left: 30, bottom: 30, right: 30)
 
     private let line = CAShapeLayer()
+    private let gridLines = CAShapeLayer()
     private var labels = [UIView]()
     private var xAxisLabels = [UIView]()
     private let labelMargin: CGFloat = 2
@@ -62,9 +63,14 @@ open class GraphView: UIView {
     }
 
     private func initializeView() {
-        layer.addSublayer(line)
+        gridLines.lineWidth = 1
+        gridLines.strokeColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1).cgColor
+        gridLines.lineDashPattern = [1, 1]
+        layer.addSublayer(gridLines)
+
         line.lineCap = CAShapeLayerLineCap.round
         line.lineWidth = lineWidth
+        layer.addSublayer(line)
     }
 
     public func reloadData() {
@@ -74,6 +80,7 @@ open class GraphView: UIView {
 
     public func clearPlot() {
         line.path = nil
+        gridLines.path = nil
         reloadData()
     }
 
@@ -85,14 +92,13 @@ open class GraphView: UIView {
         labels.forEach { $0.removeFromSuperview() }
         labels.removeAll(keepingCapacity: true)
 
-        xAxisLabels.forEach { $0.removeFromSuperview() }
-        xAxisLabels.removeAll(keepingCapacity: true)
-
         line.strokeColor = tintColor.cgColor
-        line.fillColor = backgroundColor?.cgColor
+        line.fillColor = UIColor.clear.cgColor
 
         let points = pointsForPlot(from: dataSource)
         plotLine(using: points)
+        addGridLines(from: dataSource)
+        addXAxisLabels(for: points, from: dataSource)
     }
 
     open override func tintColorDidChange() {
@@ -101,7 +107,7 @@ open class GraphView: UIView {
         layoutIfNeeded()
     }
 
-    private var contentFrame: CGRect {
+    private var plotFrame: CGRect {
         return CGRect(x: padding.left,
                       y: padding.top,
                       width: bounds.width - (padding.left + padding.right),
@@ -111,14 +117,14 @@ open class GraphView: UIView {
     private func pointsForPlot(from dataSource: GraphViewDataSource) -> [CGPoint] {
         let count = dataSource.numberOfPoints(in: self)
 
-        let xSpacing = contentFrame.width / CGFloat(count - 1)
-        let yDelta = contentFrame.height
+        let xSpacing = plotFrame.width / CGFloat(count - 1)
+        let yDelta = plotFrame.height
 
         var points = [CGPoint]()
 
         for index in 0..<count {
-            let point = CGPoint(x: CGFloat(index) * xSpacing + contentFrame.minX,
-                                y: contentFrame.maxY - dataSource.graphView(self, valueAt: index) * yDelta)
+            let point = CGPoint(x: CGFloat(index) * xSpacing + plotFrame.minX,
+                                y: plotFrame.maxY - dataSource.graphView(self, valueAt: index) * yDelta)
             points.append(point)
         }
         return points
@@ -151,28 +157,35 @@ open class GraphView: UIView {
         labels.append(container)
     }
 
-    private func addXAxisLabel(for point: CGPoint, with title: NSAttributedString?) {
-        let label = UILabel(frame: .zero)
-        label.font = UIFont.preferredFont(forTextStyle: .caption2)
-        label.adjustsFontForContentSizeCategory = true
-        label.textColor = xAxisLabelTextColor
-        label.backgroundColor = backgroundColor
-        label.attributedText = title
-        label.sizeToFit()
+    private func addXAxisLabels(for points: [CGPoint], from dataSource: GraphViewDataSource) {
+        xAxisLabels.forEach { $0.removeFromSuperview() }
+        xAxisLabels.removeAll(keepingCapacity: true)
 
-        label.center = CGPoint(x: point.x, y: bounds.maxY - label.bounds.height / 2 - 4)
-        addSubview(label)
-
-        xAxisLabels.append(label)
+        for (index, point) in points.enumerated() {
+            let text = dataSource.graphView(self, xAxisLabelForPointAt: index)
+            let label = UILabel(frame: .zero)
+            label.font = UIFont.preferredFont(forTextStyle: .caption2)
+            label.adjustsFontForContentSizeCategory = true
+            label.textColor = xAxisLabelTextColor
+            label.backgroundColor = backgroundColor
+            label.text = text
+            label.sizeToFit()
+            label.center = CGPoint(x: point.x, y: bounds.maxY - label.bounds.height / 2 - 4)
+            addSubview(label)
+            xAxisLabels.append(label)
+        }
     }
 
-//    open override func prepareForInterfaceBuilder() {
-//        super.prepareForInterfaceBuilder()
-//        data = [GraphPoint(label: "0.0", value: 0.0, axisLabel: NSAttributedString(string: "Mon")),
-//                GraphPoint(label: "0.2", value: 0.2, axisLabel: NSAttributedString(string: "Tue")),
-//                GraphPoint(label: "0.6", value: 0.6, axisLabel: NSAttributedString(string: "Wed")),
-//                GraphPoint(label: "0.3", value: 0.3, axisLabel: NSAttributedString(string: "Thu")),
-//                GraphPoint(label: "1.0", value: 1.0, axisLabel: NSAttributedString(string: "Fri"))]
-//        labelFillColor = .white
-//    }
+    private func addGridLines(from dataSource: GraphViewDataSource) {
+        let numberOfGridLines = dataSource.numberOfHorizontalGridLines(in: self)
+        let gridLinePath = CGMutablePath()
+        let ySpacing = plotFrame.height / CGFloat(numberOfGridLines - 1)
+
+        for index in 0..<numberOfGridLines {
+            gridLinePath.move(to: CGPoint(x: plotFrame.minX, y: ySpacing * CGFloat(index) + plotFrame.minY))
+            gridLinePath.addLine(to: CGPoint(x: plotFrame.maxX, y: ySpacing * CGFloat(index) + plotFrame.minY))
+        }
+
+        gridLines.path = gridLinePath
+    }
 }
