@@ -8,6 +8,8 @@ public protocol GraphViewDataSource: AnyObject {
     func graphView(_ graphView: GraphView, xAxisLabelForPointAt index: Int) -> String?
     func numberOfHorizontalGridLines(in graphView: GraphView) -> Int
     func graphView(_ graphView: GraphView, labelForHorizontalGridLineAt index: Int) -> String?
+    func hasSecondaryXAxisLabels(in graphView: GraphView) -> Bool
+    func graphView(_ graphView: GraphView, secondaryXAxisLabelForPointAt index: Int) -> String?
 }
 
 public extension GraphViewDataSource {
@@ -27,6 +29,14 @@ public extension GraphViewDataSource {
     func graphView(_ graphView: GraphView, labelForHorizontalGridLineAt index: Int) -> String? {
         return nil
     }
+
+    func hasSecondaryXAxisLabels(in graphView: GraphView) -> Bool {
+        return false
+    }
+
+    func graphView(_ graphView: GraphView, secondaryXAxisLabelForPointAt index: Int) -> String? {
+        return nil
+    }
 }
 
 @IBDesignable
@@ -40,12 +50,47 @@ open class GraphView: UIView {
         }
     }
 
-    var labelFont: UIFont = UIFont.preferredFont(forTextStyle: .caption1)
-    var labelTextColor: UIColor = .darkText
-    var labelFillColor: UIColor = .clear
-    var gridLineColor: UIColor = UIColor(white: 0.5, alpha: 1.0)
-    var xAxisLabelTextColor: UIColor = .gray
-    var padding: UIEdgeInsets = UIEdgeInsets.init(top: 20, left: 38, bottom: 30, right: 20)
+    var labelFont: UIFont = UIFont.preferredFont(forTextStyle: .caption1) {
+        didSet {
+            setNeedsLayout()
+            layoutIfNeeded()
+        }
+    }
+
+    var labelTextColor: UIColor = .darkText {
+        didSet {
+            setNeedsLayout()
+            layoutIfNeeded()
+        }
+    }
+
+    var labelFillColor: UIColor = .clear {
+        didSet {
+            setNeedsLayout()
+            layoutIfNeeded()
+        }
+    }
+
+    var gridLineColor: UIColor = UIColor(white: 0.5, alpha: 1.0) {
+        didSet {
+            setNeedsLayout()
+            layoutIfNeeded()
+        }
+    }
+
+    var xAxisLabelTextColor: UIColor = .gray {
+        didSet {
+            setNeedsLayout()
+            layoutIfNeeded()
+        }
+    }
+
+    var padding: UIEdgeInsets = UIEdgeInsets.init(top: 20, left: 38, bottom: 30, right: 20) {
+        didSet {
+            setNeedsLayout()
+            layoutIfNeeded()
+        }
+    }
 
     private let line = CAShapeLayer()
     private let gridLines = CAShapeLayer()
@@ -164,16 +209,37 @@ open class GraphView: UIView {
         xAxisLabels.forEach { $0.removeFromSuperview() }
         xAxisLabels.removeAll(keepingCapacity: true)
 
+        var primaryLabelYOffset: CGFloat = 4.0
+        var secondaryLabelYOffset: CGFloat = 0.0
+        if dataSource.hasSecondaryXAxisLabels(in: self) {
+            primaryLabelYOffset = 16.0
+            secondaryLabelYOffset = 4.0
+
+            for (index, point) in points.enumerated() {
+                let secondaryText = dataSource.graphView(self, secondaryXAxisLabelForPointAt: index)
+                let label = UILabel(frame: .zero)
+                label.font = UIFont.systemFont(ofSize: 12)
+                label.adjustsFontForContentSizeCategory = true
+                label.textColor = xAxisLabelTextColor
+                label.backgroundColor = backgroundColor
+                label.text = secondaryText
+                label.sizeToFit()
+                label.center = CGPoint(x: point.x, y: bounds.maxY - label.bounds.height / 2 - secondaryLabelYOffset)
+                addSubview(label)
+                xAxisLabels.append(label)
+            }
+        }
+
         for (index, point) in points.enumerated() {
-            let text = dataSource.graphView(self, xAxisLabelForPointAt: index)
+            let primaryText = dataSource.graphView(self, xAxisLabelForPointAt: index)
             let label = UILabel(frame: .zero)
             label.font = UIFont.systemFont(ofSize: 12)
             label.adjustsFontForContentSizeCategory = true
             label.textColor = xAxisLabelTextColor
             label.backgroundColor = backgroundColor
-            label.text = text
+            label.text = primaryText
             label.sizeToFit()
-            label.center = CGPoint(x: point.x, y: bounds.maxY - label.bounds.height / 2 - 4)
+            label.center = CGPoint(x: point.x, y: bounds.maxY - label.bounds.height / 2 - primaryLabelYOffset)
             addSubview(label)
             xAxisLabels.append(label)
         }
