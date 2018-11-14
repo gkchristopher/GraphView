@@ -145,6 +145,7 @@ open class GraphView: UIView {
         let points = pointsForPlot(from: dataSource)
         plotLine(using: points)
         addGridLines(from: dataSource)
+//        addLabel(for: points, dataSource: dataSource)
         addXAxisLabels(for: points, from: dataSource)
         addYAxisLabels(from: dataSource)
     }
@@ -182,27 +183,32 @@ open class GraphView: UIView {
         line.path = UIBezierPath.hermiteInterpolation(for: points)?.cgPath
     }
 
-    private func addLabel(for point: CGPoint, with title: String?) {
-        let label = UILabel(frame: .zero)
-        label.font = labelFont
-        label.adjustsFontForContentSizeCategory = true
-        label.textColor = labelTextColor
-        label.backgroundColor = .clear
-        label.text = title
-        label.sizeToFit()
+    private func addLabel(for points: [CGPoint], dataSource: GraphViewDataSource) {
+        labels.forEach { $0.removeFromSuperview() }
+        labels.removeAll(keepingCapacity: true)
 
-        let container = UIView(frame: label.bounds.insetBy(dx: -labelMargin, dy: -labelMargin))
-        container.addSubview(label)
-        label.center = CGPoint(x: container.bounds.midX, y: container.bounds.midY)
-        addSubview(container)
-        container.center = point
-
-        let circle = CAShapeLayer()
-        let path = UIBezierPath(roundedRect: container.bounds, cornerRadius: container.bounds.height / 2)
-        circle.path = path.cgPath
-        circle.fillColor = labelFillColor.cgColor
-        container.layer.insertSublayer(circle, at: 0)
-        labels.append(container)
+        for (index, point) in points.enumerated() {
+            let label = UILabel(frame: .zero)
+            label.font = labelFont
+            label.adjustsFontForContentSizeCategory = true
+            label.textColor = labelTextColor
+            label.backgroundColor = .clear
+            label.text = dataSource.graphView(self, labelForPointAt: index)
+            label.sizeToFit()
+            
+            let container = UIView(frame: label.bounds.insetBy(dx: -labelMargin, dy: -labelMargin))
+            container.addSubview(label)
+            label.center = CGPoint(x: container.bounds.midX, y: container.bounds.midY)
+            addSubview(container)
+            container.center = point
+            
+            let circle = CAShapeLayer()
+            let path = UIBezierPath(roundedRect: container.bounds, cornerRadius: container.bounds.height / 2)
+            circle.path = path.cgPath
+            circle.fillColor = labelFillColor.cgColor
+            container.layer.insertSublayer(circle, at: 0)
+            labels.append(container)
+        }
     }
 
     private func addXAxisLabels(for points: [CGPoint], from dataSource: GraphViewDataSource) {
