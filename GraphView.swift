@@ -53,42 +53,36 @@ open class GraphView: UIView {
     var labelFont: UIFont = UIFont.preferredFont(forTextStyle: .caption1) {
         didSet {
             setNeedsLayout()
-            layoutIfNeeded()
         }
     }
 
     var labelTextColor: UIColor = .darkText {
         didSet {
             setNeedsLayout()
-            layoutIfNeeded()
         }
     }
 
     var labelFillColor: UIColor = .clear {
         didSet {
             setNeedsLayout()
-            layoutIfNeeded()
         }
     }
 
     var gridLineColor: UIColor = UIColor(white: 0.5, alpha: 1.0) {
         didSet {
             setNeedsLayout()
-            layoutIfNeeded()
         }
     }
 
     var xAxisLabelTextColor: UIColor = .gray {
         didSet {
             setNeedsLayout()
-            layoutIfNeeded()
         }
     }
 
     var padding: UIEdgeInsets = UIEdgeInsets.init(top: 20, left: 38, bottom: 30, right: 20) {
         didSet {
             setNeedsLayout()
-            layoutIfNeeded()
         }
     }
 
@@ -284,5 +278,20 @@ open class GraphView: UIView {
             addSubview(label)
             yAxisLabels.append(label)
         }
+    }
+
+    open override func prepareForInterfaceBuilder() {
+        super.prepareForInterfaceBuilder()
+
+        backgroundColor = .lightGray
+        layer.borderColor = UIColor.black.cgColor
+        layer.borderWidth = 1
+
+        let label = UILabel(frame: .zero)
+        label.text = "GraphView"
+        label.font = UIFont.boldSystemFont(ofSize: 14)
+        label.sizeToFit()
+        label.center = center
+        addSubview(label)
     }
 }
