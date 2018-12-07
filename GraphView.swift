@@ -233,7 +233,7 @@ open class GraphView: UIView {
         for (index, point) in points.enumerated() {
             let primaryText = dataSource.graphView(self, xAxisLabelForPointAt: index)
             let label = UILabel(frame: .zero)
-            label.font = UIFont.systemFont(ofSize: 12)
+            label.font = UIFont.systemFont(ofSize: 14)
             label.adjustsFontForContentSizeCategory = true
             label.textColor = xAxisLabelTextColor
             label.backgroundColor = backgroundColor
@@ -268,7 +268,7 @@ open class GraphView: UIView {
         for index in 0..<numberOfLabels {
             let text = dataSource.graphView(self, labelForHorizontalGridLineAt: index)
             let label = UILabel(frame: .zero)
-            label.font = UIFont.systemFont(ofSize: 12)
+            label.font = UIFont.systemFont(ofSize: 14)
             label.adjustsFontForContentSizeCategory = true
             label.textColor = xAxisLabelTextColor
             label.backgroundColor = backgroundColor
