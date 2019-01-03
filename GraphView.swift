@@ -274,7 +274,7 @@ open class GraphView: UIView {
             label.backgroundColor = backgroundColor
             label.text = text
             label.sizeToFit()
-            label.center = CGPoint(x: 20, y: plotFrame.maxY - ySpacing * CGFloat(index))
+            label.center = CGPoint(x: padding.left / 2, y: plotFrame.maxY - ySpacing * CGFloat(index))
             addSubview(label)
             yAxisLabels.append(label)
         }
