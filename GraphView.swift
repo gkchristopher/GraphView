@@ -97,6 +97,12 @@ open class GraphView: UIView {
         }
     }
 
+    var yAxisLabelOffset: CGPoint = .zero {
+        didSet {
+            setNeedsLayout()
+        }
+    }
+
     private let line = CAShapeLayer()
     private let gridLines = CAShapeLayer()
     private var labels = [UIView]()
@@ -293,7 +299,8 @@ open class GraphView: UIView {
             label.backgroundColor = backgroundColor
             label.text = text
             label.sizeToFit()
-            label.center = CGPoint(x: padding.left / 2, y: plotFrame.maxY - ySpacing * CGFloat(index))
+            label.center = CGPoint(x: padding.left / 2 + yAxisLabelOffset.x,
+                                   y: plotFrame.maxY - ySpacing * CGFloat(index) + yAxisLabelOffset.y)
             addSubview(label)
             yAxisLabels.append(label)
         }
