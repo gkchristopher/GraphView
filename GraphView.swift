@@ -39,6 +39,11 @@ public extension GraphViewDataSource {
     }
 }
 
+enum GraphType {
+    case line
+    case area
+}
+
 @IBDesignable
 open class GraphView: UIView {
 
@@ -81,6 +86,12 @@ open class GraphView: UIView {
     }
 
     var padding: UIEdgeInsets = UIEdgeInsets.init(top: 20, left: 38, bottom: 30, right: 20) {
+        didSet {
+            setNeedsLayout()
+        }
+    }
+
+    var graphType: GraphType = .line {
         didSet {
             setNeedsLayout()
         }
@@ -134,7 +145,7 @@ open class GraphView: UIView {
         labels.removeAll(keepingCapacity: true)
 
         line.strokeColor = tintColor.cgColor
-        line.fillColor = UIColor.clear.cgColor
+        line.fillColor = graphType == .line ? UIColor.clear.cgColor : tintColor.cgColor
 
         let points = pointsForPlot(from: dataSource)
         plotLine(using: points)
@@ -174,7 +185,15 @@ open class GraphView: UIView {
     }
 
     private func plotLine(using points: [CGPoint]) {
-        line.path = UIBezierPath.hermiteInterpolation(for: points)?.cgPath
+        let plot = UIBezierPath.hermiteInterpolation(for: points)
+
+        if graphType == .area {
+            plot?.addLine(to: CGPoint(x: plotFrame.maxX, y: plotFrame.maxY))
+            plot?.addLine(to: CGPoint(x: plotFrame.minX, y: plotFrame.maxY))
+            plot?.close()
+        }
+
+        line.path = plot?.cgPath
     }
 
     private func addLabel(for points: [CGPoint], dataSource: GraphViewDataSource) {
