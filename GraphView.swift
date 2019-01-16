@@ -243,10 +243,10 @@ open class GraphView: UIView {
             for (index, point) in points.enumerated() {
                 let secondaryText = dataSource.graphView(self, secondaryXAxisLabelForPointAt: index)
                 let label = UILabel(frame: .zero)
-                label.font = UIFont.systemFont(ofSize: 12)
+                label.font = labelFont
                 label.adjustsFontForContentSizeCategory = true
                 label.textColor = xAxisLabelTextColor
-                label.backgroundColor = backgroundColor
+                label.backgroundColor = .clear
                 label.text = secondaryText
                 label.sizeToFit()
                 label.center = CGPoint(x: point.x, y: bounds.maxY - label.bounds.height / 2 - secondaryLabelYOffset)
@@ -258,7 +258,7 @@ open class GraphView: UIView {
         for (index, point) in points.enumerated() {
             let primaryText = dataSource.graphView(self, xAxisLabelForPointAt: index)
             let label = UILabel(frame: .zero)
-            label.font = UIFont.systemFont(ofSize: 14)
+            label.font = labelFont
             label.adjustsFontForContentSizeCategory = true
             label.textColor = xAxisLabelTextColor
             label.backgroundColor = backgroundColor
@@ -293,7 +293,7 @@ open class GraphView: UIView {
         for index in 0..<numberOfLabels {
             let text = dataSource.graphView(self, labelForHorizontalGridLineAt: index)
             let label = UILabel(frame: .zero)
-            label.font = UIFont.systemFont(ofSize: 14)
+            label.font = labelFont
             label.adjustsFontForContentSizeCategory = true
             label.textColor = xAxisLabelTextColor
             label.backgroundColor = backgroundColor
@@ -315,7 +315,7 @@ open class GraphView: UIView {
 
         let label = UILabel(frame: .zero)
         label.text = "GraphView"
-        label.font = UIFont.boldSystemFont(ofSize: 14)
+        label.font = labelFont
         label.sizeToFit()
         label.center = center
         addSubview(label)
