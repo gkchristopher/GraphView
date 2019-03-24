@@ -7,17 +7,48 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		839B789F2141F305000AF7EC /* UIBezierPath+Smoothing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839B789E2141F305000AF7EC /* UIBezierPath+Smoothing.swift */; };
+		8338B5B72247CC42005F09FD /* GraphView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8338B5B62247CC2C005F09FD /* GraphView.framework */; };
+		8338B5B82247CC42005F09FD /* GraphView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8338B5B62247CC2C005F09FD /* GraphView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		83FEE4572034AB1E00300D6D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FEE4562034AB1E00300D6D /* AppDelegate.swift */; };
 		83FEE4592034AB1E00300D6D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FEE4582034AB1E00300D6D /* ViewController.swift */; };
 		83FEE45C2034AB1E00300D6D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 83FEE45A2034AB1E00300D6D /* Main.storyboard */; };
 		83FEE45E2034AB1E00300D6D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 83FEE45D2034AB1E00300D6D /* Assets.xcassets */; };
 		83FEE4612034AB1E00300D6D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 83FEE45F2034AB1E00300D6D /* LaunchScreen.storyboard */; };
-		83FEE4692034ABF200300D6D /* GraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FEE4682034ABF200300D6D /* GraphView.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		8338B5B52247CC2C005F09FD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8338B5B12247CC2C005F09FD /* GraphView.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8338B59622479918005F09FD;
+			remoteInfo = GraphView;
+		};
+		8338B5B92247CC42005F09FD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8338B5B12247CC2C005F09FD /* GraphView.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8338B59522479918005F09FD;
+			remoteInfo = GraphView;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8338B5BB2247CC42005F09FD /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				8338B5B82247CC42005F09FD /* GraphView.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
-		839B789E2141F305000AF7EC /* UIBezierPath+Smoothing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIBezierPath+Smoothing.swift"; path = "../../UIBezierPath+Smoothing.swift"; sourceTree = "<group>"; };
+		8338B5B12247CC2C005F09FD /* GraphView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GraphView.xcodeproj; path = ../GraphView.xcodeproj; sourceTree = "<group>"; };
 		83FEE4532034AB1E00300D6D /* GraphViewExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GraphViewExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		83FEE4562034AB1E00300D6D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		83FEE4582034AB1E00300D6D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -25,7 +56,6 @@
 		83FEE45D2034AB1E00300D6D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		83FEE4602034AB1E00300D6D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		83FEE4622034AB1E00300D6D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		83FEE4682034ABF200300D6D /* GraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GraphView.swift; path = ../../GraphView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,15 +63,25 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8338B5B72247CC42005F09FD /* GraphView.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8338B5B22247CC2C005F09FD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8338B5B62247CC2C005F09FD /* GraphView.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		83FEE44A2034AB1E00300D6D = {
 			isa = PBXGroup;
 			children = (
+				8338B5B12247CC2C005F09FD /* GraphView.xcodeproj */,
 				83FEE4552034AB1E00300D6D /* GraphViewExample */,
 				83FEE4542034AB1E00300D6D /* Products */,
 			);
@@ -64,8 +104,6 @@
 				83FEE45D2034AB1E00300D6D /* Assets.xcassets */,
 				83FEE45F2034AB1E00300D6D /* LaunchScreen.storyboard */,
 				83FEE4622034AB1E00300D6D /* Info.plist */,
-				83FEE4682034ABF200300D6D /* GraphView.swift */,
-				839B789E2141F305000AF7EC /* UIBezierPath+Smoothing.swift */,
 			);
 			path = GraphViewExample;
 			sourceTree = "<group>";
@@ -80,10 +118,12 @@
 				83FEE44F2034AB1E00300D6D /* Sources */,
 				83FEE4502034AB1E00300D6D /* Frameworks */,
 				83FEE4512034AB1E00300D6D /* Resources */,
+				8338B5BB2247CC42005F09FD /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				8338B5BA2247CC42005F09FD /* PBXTargetDependency */,
 			);
 			name = GraphViewExample;
 			productName = GraphViewExample;
@@ -118,12 +158,28 @@
 			mainGroup = 83FEE44A2034AB1E00300D6D;
 			productRefGroup = 83FEE4542034AB1E00300D6D /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 8338B5B22247CC2C005F09FD /* Products */;
+					ProjectRef = 8338B5B12247CC2C005F09FD /* GraphView.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				83FEE4522034AB1E00300D6D /* GraphViewExample */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		8338B5B62247CC2C005F09FD /* GraphView.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = GraphView.framework;
+			remoteRef = 8338B5B52247CC2C005F09FD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		83FEE4512034AB1E00300D6D /* Resources */ = {
@@ -145,12 +201,18 @@
 			files = (
 				83FEE4592034AB1E00300D6D /* ViewController.swift in Sources */,
 				83FEE4572034AB1E00300D6D /* AppDelegate.swift in Sources */,
-				839B789F2141F305000AF7EC /* UIBezierPath+Smoothing.swift in Sources */,
-				83FEE4692034ABF200300D6D /* GraphView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8338B5BA2247CC42005F09FD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = GraphView;
+			targetProxy = 8338B5B92247CC42005F09FD /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		83FEE45A2034AB1E00300D6D /* Main.storyboard */ = {
@@ -286,10 +348,12 @@
 		83FEE4662034AB1E00300D6D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JCM3ZMDL4E;
 				INFOPLIST_FILE = GraphViewExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.rovingmobile.GraphViewExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -301,10 +365,12 @@
 		83FEE4672034AB1E00300D6D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JCM3ZMDL4E;
 				INFOPLIST_FILE = GraphViewExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.rovingmobile.GraphViewExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";

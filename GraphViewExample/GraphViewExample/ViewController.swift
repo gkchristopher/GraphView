@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import GraphView
 
 class ViewController: UIViewController {
 
