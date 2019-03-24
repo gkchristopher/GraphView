@@ -39,7 +39,7 @@ public extension GraphViewDataSource {
     }
 }
 
-enum GraphType {
+public enum GraphType {
     case line
     case area
 }
@@ -49,55 +49,55 @@ open class GraphView: UIView {
 
     public weak var dataSource: GraphViewDataSource?
 
-    var lineWidth: CGFloat = 4.0 {
+    public var lineWidth: CGFloat = 4.0 {
         didSet {
             line.lineWidth = lineWidth
         }
     }
 
-    var labelFont: UIFont = UIFont.preferredFont(forTextStyle: .caption1) {
+    public var labelFont: UIFont = UIFont.preferredFont(forTextStyle: .caption1) {
         didSet {
             setNeedsLayout()
         }
     }
 
-    var labelTextColor: UIColor = .darkText {
+    public var labelTextColor: UIColor = .darkText {
         didSet {
             setNeedsLayout()
         }
     }
 
-    var labelFillColor: UIColor = .clear {
+    public var labelFillColor: UIColor = .clear {
         didSet {
             setNeedsLayout()
         }
     }
 
-    var gridLineColor: UIColor = UIColor(white: 0.5, alpha: 1.0) {
+    public var gridLineColor: UIColor = UIColor(white: 0.5, alpha: 1.0) {
         didSet {
             setNeedsLayout()
         }
     }
 
-    var xAxisLabelTextColor: UIColor = .gray {
+    public var xAxisLabelTextColor: UIColor = .gray {
         didSet {
             setNeedsLayout()
         }
     }
 
-    var padding: UIEdgeInsets = UIEdgeInsets.init(top: 20, left: 38, bottom: 30, right: 20) {
+    public var padding: UIEdgeInsets = UIEdgeInsets.init(top: 20, left: 38, bottom: 30, right: 20) {
         didSet {
             setNeedsLayout()
         }
     }
 
-    var graphType: GraphType = .line {
+    public var graphType: GraphType = .line {
         didSet {
             setNeedsLayout()
         }
     }
 
-    var yAxisLabelOffset: CGPoint = .zero {
+    public var yAxisLabelOffset: CGPoint = .zero {
         didSet {
             setNeedsLayout()
         }
@@ -207,12 +207,13 @@ open class GraphView: UIView {
         labels.removeAll(keepingCapacity: true)
 
         for (index, point) in points.enumerated() {
+            guard let text = dataSource.graphView(self, labelForPointAt: index) else { continue }
             let label = UILabel(frame: .zero)
             label.font = labelFont
             label.adjustsFontForContentSizeCategory = true
             label.textColor = labelTextColor
             label.backgroundColor = .clear
-            label.text = dataSource.graphView(self, labelForPointAt: index)
+            label.text = text
             label.sizeToFit()
             
             let container = UIView(frame: label.bounds.insetBy(dx: -labelMargin, dy: -labelMargin))
@@ -224,7 +225,7 @@ open class GraphView: UIView {
             let circle = CAShapeLayer()
             let path = UIBezierPath(roundedRect: container.bounds, cornerRadius: container.bounds.height / 2)
             circle.path = path.cgPath
-            circle.fillColor = labelFillColor.cgColor
+            circle.fillColor = tintColor.cgColor
             container.layer.insertSublayer(circle, at: 0)
             labels.append(container)
         }
