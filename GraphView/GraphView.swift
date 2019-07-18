@@ -2,14 +2,14 @@ import UIKit
 import Foundation
 
 public protocol GraphViewDataSource: AnyObject {
-    func numberOfPoints(in graphView: GraphView) -> Int
     func graphView(_ graphView: GraphView, valueAt index: Int) -> CGFloat
     func graphView(_ graphView: GraphView, labelForPointAt index: Int) -> String?
     func graphView(_ graphView: GraphView, xAxisLabelForPointAt index: Int) -> String?
-    func numberOfHorizontalGridLines(in graphView: GraphView) -> Int
     func graphView(_ graphView: GraphView, labelForHorizontalGridLineAt index: Int) -> String?
-    func hasSecondaryXAxisLabels(in graphView: GraphView) -> Bool
     func graphView(_ graphView: GraphView, secondaryXAxisLabelForPointAt index: Int) -> String?
+    func numberOfPoints(in graphView: GraphView) -> Int
+    func numberOfHorizontalGridLines(in graphView: GraphView) -> Int
+    func hasSecondaryXAxisLabels(in graphView: GraphView) -> Bool
 }
 
 public extension GraphViewDataSource {
